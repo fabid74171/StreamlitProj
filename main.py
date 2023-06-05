@@ -22,5 +22,5 @@ def main():
         movie_name = title.a.text
         st.write(movie_name)
 
-if _name_ == '_main_':
-    main()
+// if _name_ == '_main_':
+  main()
