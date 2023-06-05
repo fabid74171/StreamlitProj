@@ -18,16 +18,10 @@ def scrape_movie_titles(url):
 st.title("IMDb Movie Title Scraper")
 
 # Input IMDb URL
-url = st.text_input("Enter IMDb URL:", "https://www.imdb.com/chart/top")
+ movie_titles = soup.find_all('td', class_='titleColumn')
 
-# Scrape movie titles
-if st.button("Scrape"):
-    titles = scrape_movie_titles(url)
-    
-    # Display scraped movie titles
-    if titles:
-        st.header("Movie Titles")
-        for title in titles:
-            st.write(title)
-    else:
-        st.write("No movie titles found.")
+    # Display the extracted movie titles in Streamlit
+
+    for title in movie_titles:
+        movie_name = title.a.text
+        st.write(movie_name)
