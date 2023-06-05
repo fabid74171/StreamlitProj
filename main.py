@@ -1,33 +1,20 @@
+import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-import streamlit as st
-
-def scrape_movie_titles(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+st.title('Website Title Scraper')
+# Send a GET request to the URL
+url = "https://kafka.pk/collections/all-tapestry"
+response = requests.get(url)
+# Parse the HTML content using Beautiful Soup
+soup = BeautifulSoup(response.content, "html.parser")
+# Find all the "span" tags with class "title"
+title_spans = soup.find_all("span", class_="title")
+reviews=soup.find_all("span",class_="jdgm-prev-badge__text")
+i=0
+# Extract the text inside each "span" tag
+for span in title_spans:
+    title_text = span.get_text()
     
-    movie_titles = []
-    movie_elements = soup.select('.lister-item-header > a')
-    
-    for element in movie_elements:
-        movie_titles.append(element.text)
-    
-    return movie_titles
-
-# Streamlit web app
-st.title("IMDb Movie Title Scraper")
-
-# Input IMDb URL
-url = st.text_input("Enter IMDb URL:", "https://www.imdb.com/chart/top")
-
-# Scrape movie titles
-if st.button("Scrape"):
-    titles = scrape_movie_titles(url)
-    
-    # Display scraped movie titles
-    if titles:
-        st.header("Movie Titles")
-        for title in titles:
-            st.write(title)
-    else:
-        st.write("No movie titles found.")
+    st.text(title_text)
+    st.text(reviews[i].get_text())
+    i=i+1
