@@ -1,25 +1,33 @@
-import streamlit as st
 import requests
 from bs4 import BeautifulSoup
+import streamlit as st
 
-def main():
-    st.title("Movie Title Scraper")
-
-    # Set the URL
-    url = "https://www.imdb.com/chart/top"
-
-    # Make a GET request to the website
+def scrape_movie_titles(url):
     response = requests.get(url)
-
-    # Create BeautifulSoup object
     soup = BeautifulSoup(response.text, 'html.parser')
+    
+    movie_titles = []
+    movie_elements = soup.select('.lister-item-header > a')
+    
+    for element in movie_elements:
+        movie_titles.append(element.text)
+    
+    return movie_titles
 
-    # Extract the movie titles
-    movie_titles = soup.find_all('td', class_='titleColumn')
+# Streamlit web app
+st.title("IMDb Movie Title Scraper")
 
-    # Display the extracted movie titles in Streamlit
-    for title in movie_titles:
-        movie_name = title.a.text
-        st.write(movie_name)
+# Input IMDb URL
+url = st.text_input("Enter IMDb URL:", "https://www.imdb.com/chart/top")
 
-  main()
+# Scrape movie titles
+if st.button("Scrape"):
+    titles = scrape_movie_titles(url)
+    
+    # Display scraped movie titles
+    if titles:
+        st.header("Movie Titles")
+        for title in titles:
+            st.write(title)
+    else:
+        st.write("No movie titles found.")
